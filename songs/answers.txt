@@ -1,0 +1,11 @@
+If songs.db contains the top 100 songs of one listener from 2018, how would you characterize their audio aura?
+
+To estimate whether a song feels sad, happy, or neutral, we can rely on the audio features available in songs.db, such as energy, tempo and loudness.
+For excemple, songs with a hight tempo and hight energy could be charactherized as energetic.
+
+Hypothesize about why the way you’ve calculated this aura might not be very representative of the listener. What better ways of calculating this aura would you propose?
+
+The approach I proposed was limited because a sad song can still be fast or energetic.
+This makes the results unreliable and may not reflect the listener’s actual preferences.
+
+A better approach could involve using features likes speechiness or valence, which provide a clearer indication of the émotional of a song.
