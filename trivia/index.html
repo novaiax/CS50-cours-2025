@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="styles.css" rel="stylesheet">
+        <title>Trivia!</title>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // MULTIPLE CHOICE
+
+            // Correct answer
+            document.querySelector('.btn-correct').addEventListener('click', function () {
+                this.classList.add('correct');
+                document.querySelector('#feedback1').innerHTML = 'Correct!';
+            });
+
+            // Wrong answer
+            document.querySelectorAll('.btn-wrong').forEach(button => {
+                button.addEventListener('click', function () {
+                    this.classList.add('incorrect');
+                    document.querySelector('#feedback1').innerHTML = 'Incorrect';
+                });
+            });
+
+            // FREE answer
+
+            document.querySelector('#free-check').addEventListener('click', function () {
+
+                let answer = document.querySelector('#free-input').value.trim().toLowerCase();
+
+                if (answer === "tokyo") {
+                    document.querySelector('#feedback2').innerHTML = 'Correct!';
+                    document.querySelector('#feedback2').style.color = 'green';
+                } else {
+                    document.querySelector('#feedback2').innerHTML = 'Incorrect';
+                    document.querySelector('#feedback2').style.color = 'red';
+                }
+
+            });
+        });
+    </script>
+    <body>
+        <div class="header">
+            <h1>Trivia!</h1>
+        </div>
+
+        <div class="container">
+            <!-- Part 1 -->
+
+            <div class="section">
+                <h2>Part 1: Multiple Choice</h2>
+                <hr>
+                <div>
+                    <h3>Which language is used to style web pages?</h3>
+
+                    <button class="btn-wrong">HTML</button>
+                    <button class="btn-wrong">Python</button>
+                    <button class="btn-correct">CSS</button>
+
+                    <p id="feedback1"></p>
+                </div>
+                <br>
+            </div>
+
+            <!-- Part 2 -->
+            <div class="section">
+                <h2>Part 2: Free Response</h2>
+                <hr>
+                <div>
+                    <h3>What is the capital city of Japan?</h3>
+
+                    <input id="free-input" type="text">
+                    <button id="free-check">Check</button>
+
+                    <p id="feedback2"></p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
