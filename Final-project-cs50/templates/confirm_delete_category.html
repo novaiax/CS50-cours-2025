@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}Confirm deletion{% endblock %}
+
+{% block main %}
+<h2>Confirm deletion</h2>
+
+<p>
+    You are about to delete the category:<br>
+    <strong>{{ category_name }}</strong>
+</p>
+
+<p>
+    ⚠️ All tasks in this category will be permanently deleted.
+</p>
+
+<form method="post" action="/delete_category">
+    <input type="hidden" name="category_id" value="{{ category_id }}">
+    <input type="hidden" name="confirm" value="yes">
+
+    <button type="submit" style="color:red;"  class="deleted_button">
+        Yes, delete everything
+    </button>
+</form>
+
+<br>
+
+<a href="/journal">Cancel</a>
+{% endblock %}

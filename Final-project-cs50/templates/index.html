@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}Journal{% endblock %}
+
+{% block main %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles_index.css') }}">
+
+<div class="index-hero">
+    <div class="index-overlay"></div>
+
+    <div class="index-content">
+        <h1><h1>Welcome, {{ username }}</h1>
+        <p>Access your bord journal</p>
+
+        <div class="index-actions">
+            <a href="/journal" class="btn-primary">🔥 Journal</a>
+            <a href="/old_journals" class="btn-secondary">📚 Historique</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

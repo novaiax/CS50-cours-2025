@@ -1,0 +1,150 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Journal — Archive
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles_journal.css') }}">
+{% endblock %}
+
+{% block main %}
+
+{% if mode == "list" %}
+
+<h2 class="text-center mb-4">Historique des journaux</h2>
+
+<ul class="journal-list">
+    {% for d in days %}
+        <li>
+            <a href="/old_journal/{{ d.date }}">
+                {{ d.date }}
+            </a>
+            — Total : {{ d.total_score }}
+            (Main : {{ d.main_score }}, Bonus : {{ d.bonus_score }})
+        </li>
+    {% else %}
+        <li>Aucun journal enregistré.</li>
+    {% endfor %}
+</ul>
+
+{% elif mode == "detail" %}
+
+<h2 class="text-center mb-4">
+    Journal de bord du {{ day.date }}
+</h2>
+
+<div class="score-box" style="margin-bottom:20px;">
+    <p>
+        <strong>Score sans bonus :</strong>
+        {{ day.main_score }}
+        <br>
+        <strong>Bonus :</strong>
+        +{{ day.bonus_score }}
+        <br>
+        <strong>Score total :</strong>
+        {{ day.total_score }}
+    </p>
+</div>
+
+<hr>
+
+<!-- DAILY INPUTS -->
+{% if daily_inputs %}
+<h3>Journal</h3>
+
+{% for q in daily_inputs %}
+<div class="daily-input-row">
+
+    <label class="daily-input-label">
+        <strong>{{ q.name }}</strong>
+    </label>
+
+    <div class="daily-input-control">
+
+        {% if q.type == "scale" %}
+            <span class="readonly-value">
+                {{ q.value if q.value is not none else "—" }}
+            </span>
+
+        {% elif q.type == "boolean" %}
+            <span class="readonly-value">
+                {% if q.value == 1 %}Oui{% elif q.value == 0 %}Non{% else %}—{% endif %}
+            </span>
+
+        {% elif q.type == "text" %}
+            <div class="readonly-text">
+                {{ q.note or "—" }}
+            </div>
+        {% endif %}
+
+    </div>
+
+    {% if q.description %}
+    <div class="daily-input-sub">
+        <div class="accordion-content">
+            {{ q.description }}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endfor %}
+{% endif %}
+
+<hr>
+
+<!-- TASKS -->
+{% if tasks %}
+<h3>Tâches</h3>
+
+{% for category, items in tasks.items() %}
+<h4>{{ category }}</h4>
+
+<ul>
+{% for task in items %}
+<li class="task">
+
+    <div class="task-row">
+
+        <span class="task-checkbox">
+            {% if task.id_task in completed_tasks %}
+                ✅
+            {% else %}
+                ⬜
+            {% endif %}
+        </span>
+
+        <span class="task-title {% if task.point_type == 'bonus' %}task-bonus{% endif %}">
+            {{ task.name }} ({{ task.points }} pts)
+        </span>
+
+        {% if task.link %}
+            <a href="{{ task.link }}" target="_blank" class="task-link">↗</a>
+        {% endif %}
+
+    </div>
+
+    {% if task.note %}
+    <div class="task-sub">
+        <div class="accordion-content">
+            {{ task.note | safe }}
+        </div>
+    </div>
+    {% endif %}
+
+</li>
+{% endfor %}
+</ul>
+{% endfor %}
+{% endif %}
+
+{% if not tasks and not daily_inputs %}
+<div class="empty-journal">
+    <p>Aucune donnée enregistrée pour ce jour.</p>
+</div>
+{% endif %}
+
+{% endif %}  {# ← fermeture mode list / detail #}
+
+{% endblock %}

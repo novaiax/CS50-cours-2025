@@ -1,0 +1,495 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Journal
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles_journal.css') }}">
+{% endblock %}
+
+{% block main %}
+<h2 class = "text-center mb-4">Journal de bord du {{ today }}</h2>
+
+<div class="score-box" style="margin-bottom:20px;">
+    <p>
+        <strong>Score sans bonus :</strong>
+        {{ scores.main_done }} / {{ scores.main_max }}
+        <br>
+
+        <strong class="bonus-score">Bonus :</strong>
+        <span class="bonus-score">+{{ scores.bonus }}</span>
+        <br>
+
+        <strong>Score total :</strong>
+        {{ scores.total }}
+    </p>
+</div>
+
+
+<!-- Create category + deleted category -->
+{% if editable %}
+<button onclick="toggleAddCategory()">➕ Create Category</button>
+{% endif %}
+
+<div id="add-category-form">
+    <form method="post" action="/add_category">
+        <input
+            type="text"
+            name="name"
+            placeholder="Category name"
+            required
+        >
+        <button type="submit">Create</button>
+    </form>
+</div>
+
+{% if editable %}
+<button onclick="toggleDeleteCategory()">🗑 Delete Category</button>
+{% endif %}
+
+<div id="delete-category-form">
+    <form method="post" action="/delete_category">
+        <select name="category_id" required>
+            {% for category in categories %}
+                <option value="{{ category.id_category }}">
+                    {{ category.name }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Confirm delete</button>
+    </form>
+</div>
+
+<script>
+function toggleAddCategory() {
+    const form = document.getElementById("add-category-form");
+    form.style.display = form.style.display === "none" ? "block" : "none";
+}
+
+function toggleDeleteCategory() {
+    const form = document.getElementById("delete-category-form");
+    form.style.display = form.style.display === "none" ? "block" : "none";
+}
+
+</script>
+
+
+<!-- Add tasks + deleted tasks -->
+{% if editable %}
+<button onclick="toggleAddTask()">➕ Add Task</button>
+{% endif %}
+
+<div id="add-task-form">
+    <form method="post" action="/add_task">
+        <input type="text" name="name" placeholder="Task name" required>
+
+        <select name="categorie" required>
+            {% for cat in categories %}
+                <option value="{{ cat.name }}">{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+
+        <input type="number" step="0.5" name="points" placeholder="Points" required>
+
+        <select name="point_type" required>
+            <option value="main">Points normaux</option>
+            <option value="bonus">Points bonus</option>
+        </select>
+
+        <input type="text" name="link" placeholder="Lien (optionnel)">
+
+        <!-- NOTE TOGGLE -->
+        <button type="button" onclick="toggleAddTaskNote()">Add note</button>
+
+        <!-- NOTE FIELD -->
+        <textarea
+            name="note"
+            id="note-field"
+            placeholder="Optional note (why / how / context)">
+        </textarea>
+
+        <button type="submit">Create</button>
+
+    </form>
+</div>
+
+<script>
+function toggleAddTask() {
+    const form = document.getElementById("add-task-form");
+    form.style.display = form.style.display === "none" ? "block" : "none";
+}
+
+function toggleAddTaskNote() {
+    const note = document.getElementById("note-field");
+    note.style.display = note.style.display === "none" ? "block" : "none";
+}
+</script>
+
+{% if editable %}
+<button onclick="toggleDeleteTask()">🗑 Delete Task</button>
+{% endif %}
+
+<div id="delete-task-form">
+    <form method="post" action="/delete_task">
+        <select name="task_id" required>
+            {% for category, items in tasks.items() %}
+                {% for task in items %}
+                    <option value="{{ task.id_task }}">
+                        {{ category }} — {{ task.name }}
+                    </option>
+                {% endfor %}
+            {% endfor %}
+        </select>
+
+        <button type="submit">Confirm delete</button>
+    </form>
+</div>
+
+<script>
+function toggleDeleteTask() {
+    const form = document.getElementById("delete-task-form");
+    form.style.display = form.style.display === "none" ? "block" : "none";
+}
+</script>
+
+
+<!-- Section 2 -->
+{% if editable %}
+<button onclick="toggleAddInput()">➕ Add Daily Input</button>
+{% endif %}
+
+<div id="add-input" style="display:none;">
+  <form method="post" action="/add_daily_input">
+
+    <input name="name" placeholder="Question" class="input-question" required>
+
+    <select name="type" id="input-type" onchange="toggleScaleOptions(this.value)">
+      <option value="scale">Note chiffrée (ex : 1 → 5)</option>
+      <option value="boolean">Oui / Non</option>
+      <option value="text">Texte libre</option>
+    </select>
+
+    <!-- OPTIONS SCALE -->
+    <div id="scale-options" style="display:none;">
+      <input name="min_value" type="number" placeholder="Note la plus basse">
+      <input name="max_value" type="number" placeholder="Note la plus haute">
+
+      <div class="count-main-row">
+        <label>
+          <input type="checkbox" name="count_in_main" value="1">
+          Compter dans le calcul des points normaux
+        </label>
+      </div>
+    </div>
+
+    <textarea
+      name="description"
+      placeholder="Optionnel — explique comment interpréter la question">
+    </textarea>
+
+    <button type="submit">Créer</button>
+
+  </form>
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+  const select = document.getElementById("input-type");
+  toggleScaleOptions(select.value);
+});
+
+function toggleScaleOptions(type) {
+const box = document.getElementById("scale-options");
+box.style.display = (type === "scale") ? "block" : "none";
+}
+
+function toggleAddInput() {
+  const box = document.getElementById("add-input");
+
+  if (box.style.display === "none" || box.style.display === "") {
+    box.style.display = "block";
+  } else {
+    box.style.display = "none";
+  }
+}
+</script>
+
+{% if editable %}
+<button onclick="toggleDeleteInput()">🗑 Delete Daily Input</button>
+{% endif %}
+
+<div id="delete-input-box" style="display:none; margin-top:10px;">
+  <select id="delete-input-select">
+    {% for q in custom_inputs %}
+      <option value="{{ q.id_input_def }}">{{ q.name }}</option>
+    {% endfor %}
+  </select>
+
+  <button onclick="deleteDailyInput()">Delete</button>
+</div>
+
+<script>
+function toggleDeleteInput() {
+  const box = document.getElementById("delete-input-box");
+  box.style.display = box.style.display === "none" ? "block" : "none";
+}
+
+function deleteDailyInput() {
+  const select = document.getElementById("delete-input-select");
+  const inputDefId = select.value;
+
+  if (!inputDefId) return;
+
+  if (!confirm("Supprimer définitivement cette question ?")) return;
+
+  const formData = new FormData();
+  formData.append("input_def_id", inputDefId);
+
+  fetch("/delete_daily_input", {
+    method: "POST",
+    body: formData
+  }).then(() => {
+    location.reload();
+  });
+}
+</script>
+
+<!-- Si il y a rien de creer : message afficher -->
+
+{% if not tasks and not custom_inputs %}
+
+  <div class="empty-journal">
+
+    <h3>Créez votre journal</h3>
+
+    <ol>
+      <li>
+        <strong>Créez vos catégories</strong><br>
+        Elles servent uniquement à organiser vos taches quotidiennes
+      </li>
+
+      <li>
+        <strong>Ajoutez vos tâches</strong><br>
+        Définissez vos actions quotidiennes et rattachez-les à vos catégories.
+      </li>
+
+      <li>
+        <strong>Personnalisez votre journal</strong><br>
+        Ajoutez des questions, notes, réflexions ou suivis personnalisés.
+      </li>
+    </ol>
+
+    <p class="empty-hint">
+      Commencez par cliquer sur <strong>➕ Create Category</strong>
+    </p>
+
+  </div>
+
+{% endif %}
+
+<!--   ------------------------------  -->
+
+<hr>
+
+{% for q in custom_inputs %}
+  <div class="daily-input-row">
+
+    <label class="daily-input-label">
+      <strong>{{ q.name }}</strong>
+    </label>
+
+    <!-- CHAMP DE RÉPONSE -->
+    <div class="daily-input-control">
+
+      {% if q.type == "scale" and q.min_value is not none and q.max_value is not none %}
+        <select
+          data-input-id="{{ q.id_input_def }}"
+          onchange="autoSave(this)">
+          <option value="">—</option>
+          {% for i in range(q.min_value, q.max_value + 1) %}
+            <option value="{{ i }}"
+              {% if q.value == i %}selected{% endif %}>
+              {{ i }}
+            </option>
+          {% endfor %}
+        </select>
+
+      {% elif q.type == "boolean" %}
+        <select
+          data-input-id="{{ q.id_input_def }}"
+          onchange="autoSave(this)">
+          <option value="">—</option>
+          <option value="1" {% if q.value == 1 %}selected{% endif %}>Oui</option>
+          <option value="0" {% if q.value == 0 %}selected{% endif %}>Non</option>
+        </select>
+
+      {% elif q.type == "text" %}
+        <textarea
+          data-input-id="{{ q.id_input_def }}"
+          onblur="autoSave(this)">{{ q.note or "" }}</textarea>
+      {% endif %}
+
+    </div>
+
+    <!-- DESCRIPTION (ACCORDÉON) -->
+    {% if q.description %}
+      <div class="daily-input-sub">
+
+        <button type="button"
+                class="accordion-title"
+                onclick="toggleInputDescription({{ q.id_input_def }})">
+          <span id="input-chevron-{{ q.id_input_def }}">▸</span> Description
+        </button>
+
+        <div id="input-desc-{{ q.id_input_def }}"
+             class="accordion-content"
+             style="display:none;">
+          {{ q.description }}
+        </div>
+
+      </div>
+    {% endif %}
+
+  </div>
+{% endfor %}
+
+
+<script>
+function autoSave(el) {
+  const inputDefId = el.dataset.inputId;
+  const value = el.value;
+
+  const formData = new FormData();
+  formData.append("input_def_id", inputDefId);
+  formData.append("value", value);
+
+  fetch("/update_daily_input", {
+    method: "POST",
+    body: formData
+  });
+}
+
+function toggleInputDescription(id) {
+  const body = document.getElementById("input-desc-" + id);
+  const chevron = document.getElementById("input-chevron-" + id);
+
+  const isOpen = body.style.display === "block";
+  body.style.display = isOpen ? "none" : "block";
+  chevron.textContent = isOpen ? "▸" : "▾";
+}
+</script>
+
+
+
+
+
+
+
+<!-- Accordeons ect -->
+<hr>
+
+{% for category, items in tasks.items() %}
+<h3>{{ category }}</h3>
+
+<ul>
+{% for task in items %}
+<li class="task">
+
+    <!-- LIGNE PRINCIPALE -->
+    <div class="task-row">
+
+        <form method="post" action="/journal">
+            <input type="hidden" name="task_id" value="{{ task.id_task }}">
+            <input type="checkbox"
+                   {% if task.id_task in completed_tasks %}checked{% endif %}
+                   onchange="this.form.submit()">
+        </form>
+
+        <span class="task-title {% if task.point_type == 'bonus' %}task-bonus{% endif %}">
+            {{ task.name }} ({{ task.points }} pts)
+        </span>
+
+        {% if task.link %}
+            <a href="{{ task.link }}" target="_blank" class="task-link">↗</a>
+        {% endif %}
+
+        <button type="button"
+                class="edit-toggle"
+                onclick="toggleEdit({{ task.id_task }})">
+            Edit
+        </button>
+    </div>
+
+    <!-- ACCORDÉON NOTE -->
+    {% if task.note %}
+    <div class="task-sub">
+
+        <button type="button"
+                class="accordion-title"
+                onclick="toggleNote({{ task.id_task }})">
+            <span id="chevron-{{ task.id_task }}">▸</span> Note
+        </button>
+
+        <div id="note-{{ task.id_task }}" class="accordion-content">
+            {{ task.note | safe }}
+        </div>
+
+    </div>
+    {% endif %}
+
+    <!-- EDIT -->
+    <div id="edit-{{ task.id_task }}" class="task-edit">
+        <form method="post" action="/edit_task">
+
+            <input type="hidden" name="task_id" value="{{ task.id_task }}">
+
+            <input type="text" name="name" value="{{ task.name }}" required>
+
+            <select name="categorie">
+                {% for cat in categories %}
+                    <option value="{{ cat.name }}"
+                        {% if cat.name == task.categorie %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <input type="number" step="0.5" name="points" value="{{ task.points }}">
+
+            <select name="point_type">
+                <option value="main" {% if task.point_type == 'main' %}selected{% endif %}>Main</option>
+                <option value="bonus" {% if task.point_type == 'bonus' %}selected{% endif %}>Bonus</option>
+            </select>
+
+            <input type="text" name="link" value="{{ task.link or '' }}" placeholder="Lien (optionnel)" >
+
+            <textarea name="note" placeholder="Optional note">{{ task.note or '' }}</textarea>
+
+            <button type="submit">Save</button>
+        </form>
+    </div>
+
+</li>
+{% endfor %}
+</ul>
+{% endfor %}
+
+<script>
+function toggleNote(id) {
+    const body = document.getElementById("note-" + id);
+    const chevron = document.getElementById("chevron-" + id);
+
+    const isOpen = body.style.display === "block";
+    body.style.display = isOpen ? "none" : "block";
+    chevron.textContent = isOpen ? "▸" : "▾";
+}
+
+function toggleEdit(id) {
+    const el = document.getElementById("edit-" + id);
+    el.style.display = el.style.display === "block" ? "none" : "block";
+}
+</script>
+
+{% endblock %}
