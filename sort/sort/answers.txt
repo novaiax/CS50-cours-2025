@@ -1,0 +1,14 @@
+sort1 uses: Bubble Sort (lent) n°3 
+How do you know?: Because it is slow on reversed input but much faster on sorted input.
+This behavior is typical of Bubble Sort, which compares each pair of adjacent elements and swaps them if they are in the wrong order.
+When the list is already sorted, no swaps are needed, so the algorithm finishes much faster.
+
+sort2 uses: Merge Sort (the faster) n°1
+How do you know?: Because it is always the fastest in all cases (reversed, random, and sorted).
+This matches Merge Sort, which divides the list into smaller sublists, sorts them separately, and then merges them together.
+It always performs efficiently thanks to its divide-and-conquer structure.
+
+sort3 uses: Selection Sort (middle faster) n°2
+How do you know?: Because it takes about the same time for all inputs (reversed, random, or sorted).
+This is typical of Selection Sort, which scans the entire list in each iteration to find the smallest element.
+Even if the list is already sorted, it still performs the same number of comparisons, leading to consistent performance.
