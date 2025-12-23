@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="/static/styles.css" rel="stylesheet">
+        <title>Birthdays</title>
+    </head>
+
+    <body>
+        <div class="header">
+            <h1>Birthdays</h1>
+        </div>
+        <div class="container">
+            <div class="section">
+                <h2>Add a Birthday</h2>
+                <form action="/" method="POST">
+                    <label>Name :</label>
+                    <input type="text" name="name" required>
+
+                    <label>Month :</label>
+                    <input type="text" name="month" required>
+
+                    <label>Day :</label>
+                    <input type="text" name="day" required>
+
+                    <button type="submit">Add birthday</button>
+                </form>
+            </div>
+
+            <div class="section">
+                <h2>All Birthdays</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Birthday</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in birthdays %}
+                            <tr>
+                                <td>{{ row["name"] }}</td>
+                                <td>{{ row["month"] }}/{{ row["day"] }}</td>
+                                <td>
+                                    <form action="/delete" method="POST">
+                                        <input type="hidden" name="id" value="{{ row['id'] }}">
+                                        <button type="submit">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </div>
+            </div>
+        </body>
+    </html>
