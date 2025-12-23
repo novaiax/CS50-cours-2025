@@ -1,0 +1,35 @@
+HTML tags used :
+
+<h1>
+<div>
+<button>
+<p>
+<img>
+<main>
+<footer>
+<section>
+<script>
+<link>
+
+CSS selectors and properties used (5 minimum):
+
+Selectors:
+.background-layer
+.title
+.focus-box
+.accordion
+.odd-title
+
+Properties:
+- background
+- top
+- margin
+- position
+- z-index
+
+Bootstrap usage:
+
+I used Bootstrap for layout, responsive design, and styled components such as buttons and alignment utilities
+
+JavaScript usage:
+I used JavaScript to create an interactive Pomodoro timer and to dynamically change the FAQ content between French and English.

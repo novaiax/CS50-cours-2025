@@ -1,0 +1,53 @@
+body
+{
+    background-image: url("images/banniere.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: -5;
+}
+
+.logo
+{
+    width: 20%;
+    height: 100px;
+    objectif-fit: cover;
+}
+
+header, main, footer
+{
+    position: relative;
+    z-index: 1;
+}
+
+.title
+{
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    z-index: 1;
+    color: white;
+}
+
+.odd-title
+{
+    color: white;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    z-index: 5;
+}
+

@@ -1,0 +1,90 @@
+body
+{
+    background-image: url("images/banniere.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: -5;
+}
+
+header, main, footer
+{
+    position: relative;
+    z-index: 1;
+}
+
+.title
+{
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    z-index: 1;
+    color: white;
+}
+
+.odd-title
+{
+    color: white;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    z-index: 5;
+}
+
+  .reseaux-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .reseau-card {
+    background: #1a1a1a;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .reseau-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(77,163,255,0.5);
+  }
+
+  .reseau-card a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  .reseau-card img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 12px;
+    transition: transform 0.3s ease;
+  }
+
+  .reseau-card:hover img {
+    transform: scale(1.15);
+  }
+
+  .reseau-card span {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #fff;
+  }
