@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Users
+{% endblock %}
+
+{% block main %}
+
+<h2 class="text-center mb-4">Liste des utilisateurs</h2>
+
+<table class="table table-striped mx-auto w-auto">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom d'utilisateur</th>
+            <th>Cash</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.cash }}</td>
+            <td>
+                <form action="/delete_user" method="post">
+                    <input type="hidden" name="id" value="{{ user.id }}">
+                    <button class="btn btn-danger btn-sm" type="submit">
+                        Supprimer
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+

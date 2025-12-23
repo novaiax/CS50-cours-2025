@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+    <form action="/buy" method="post">
+        <div class="mb-3">
+            <input class = "form-control mx-auto w-auto" autocomplete="off" autofocus name="symbol" placeholder="Symbol (e.g. AAPL)" type="text" required></div>
+            <input class = "form-control mx-auto w-auto" min="1" autocomplete="off" autofocus name="shares" placeholder="Shares" type="number" required></div>
+            <br>
+        <button class="btn btn-primary" type="submit">Buy</button>
+    </form>
+{% endblock %}
